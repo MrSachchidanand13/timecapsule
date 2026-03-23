@@ -52,7 +52,7 @@ jobs:
         run: pip install pytest pytest-timeout
 
       - name: Install package (pure stdlib — no deps needed)
-        run: pip install -e . --no-deps
+        run: pip install . --no-deps
 
       - name: Run tests
         run: pytest tests/ -v --tb=short --timeout=60
