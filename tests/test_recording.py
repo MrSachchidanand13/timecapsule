@@ -27,7 +27,7 @@ def run_and_load(fn, every=0.05, **kwargs):
     """Run fn while recording, return the loaded .tc dict."""
     with tempfile.TemporaryDirectory() as tmp:
         out = os.path.join(tmp, "test.tc")
-        tc.record(every=every, output=out, live=False, warn=True, **kwargs)
+        tc.record(every=every, output=out, live=False, **kwargs)
         fn()
         tc.stop()
         return load_tc(out)
@@ -199,8 +199,10 @@ class TestFunctionTiming:
 
             tc.stop()
             d = load_tc(out)
-            assert "add" in d["fn_timings"], "trace decorator did not record timings"
-            assert len(d["fn_timings"]["add"]) == 5
+            assert any("add" in k for k in d["fn_timings"]), \
+                f"trace decorator did not record timings — keys: {list(d['fn_timings'].keys())}"
+            key = next(k for k in d["fn_timings"] if "add" in k)
+            assert len(d["fn_timings"][key]) == 5
 
     def test_trace_decorator_records_calls(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -216,7 +218,9 @@ class TestFunctionTiming:
 
             tc.stop()
             d = load_tc(out)
-            assert d["fn_calls"].get("multiply", 0) == 7
+            key = next((k for k in d["fn_calls"] if "multiply" in k), None)
+            assert key is not None, f"multiply not found in fn_calls — keys: {list(d['fn_calls'].keys())}"
+            assert d["fn_calls"][key] == 7
 
     def test_fn_entry_no_corruption_under_exception(self):
         """Bug A2 — fn_entry must not underflow when exception unwinds stack."""

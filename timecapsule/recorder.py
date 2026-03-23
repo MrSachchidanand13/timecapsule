@@ -76,6 +76,14 @@ from collections import defaultdict, deque
 
 __version__ = "6.0"
 
+# ── Force UTF-8 output on Windows (cp1252 default crashes on →, ✓, ═ etc.) ──
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # ─────────────────────────────────────────────────────────────────────────────
 #  C EXTENSION  (optional)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2865,10 +2873,10 @@ def loop_detector(path=None):
     print(f"\n  loop_detector — {src}"); print("  "+"─"*65)
     if not findings: print(f"  {green('✓ No loop issues detected')}")
     else:
-        sc={"HIGH":(31,1),"MEDIUM":(33,),"LOW":(2,)}
+        sc={"HIGH":"1;31","MEDIUM":"33","LOW":"2"}
         for f2 in findings:
-            cc=sc.get(f2["severity"],(0,))
-            tag=_c(f"[{f2['type']:<8}]",*cc); sev=_c(f2["severity"],*cc)
+            cc=sc.get(f2["severity"],"0")
+            tag=_c(f"[{f2['type']:<8}]",cc); sev=_c(f2["severity"],cc)
             fn_s=cyan(f"{f2['fn']}()")+( f":{f2['line']}" if f2["line"] else "")
             print(f"  {tag} {sev:<6}  {fn_s}"); print(f"           {dim(f2['evidence'])}")
     print("  "+"─"*65+f"\n  {len(findings)} finding(s)\n")

@@ -131,19 +131,23 @@ class TestTimings:
 
     def test_timings_has_compute(self, tc_file):
         t = tc.timings(tc_file)
-        assert "compute" in t, "compute() not found in timings"
+        # fn name may be qualified: "tc_file.<locals>.compute" or just "compute"
+        assert any("compute" in k for k in t), \
+            f"compute() not found in timings — keys: {list(t.keys())}"
 
     def test_timings_has_required_fields(self, tc_file):
         t = tc.timings(tc_file)
-        if "compute" in t:
-            s = t["compute"]
+        key = next((k for k in t if "compute" in k), None)
+        if key:
+            s = t[key]
             for field in ["calls", "avg_ms", "p95_ms", "min_ms", "max_ms", "total_ms"]:
                 assert field in s, f"'{field}' missing from timing stats"
 
     def test_timings_calls_count(self, tc_file):
         t = tc.timings(tc_file)
-        if "compute" in t:
-            assert t["compute"]["calls"] == 10
+        key = next((k for k in t if "compute" in k), None)
+        if key:
+            assert t[key]["calls"] == 10
 
     def test_slowest_returns_list(self, tc_file):
         slow = tc.slowest(tc_file, top_n=5)
@@ -159,7 +163,8 @@ class TestTimings:
     def test_rate_returns_dict(self, tc_file):
         r = tc.rate(tc_file)
         assert isinstance(r, dict)
-        assert "compute" in r
+        assert any("compute" in k for k in r), \
+            f"compute not found in rate — keys: {list(r.keys())}"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -364,7 +369,7 @@ class TestExportForClaude:
     def test_file_has_required_sections(self, tc_file, tmp_path):
         out = str(tmp_path / "for_claude.txt")
         tc.export_for_claude(tc_file, out)
-        content = open(out).read()
+        content = open(out, encoding="utf-8").read()
         assert "TIMECAPSULE RECORDING" in content
         assert "SUMMARY" in content
         assert "FUNCTION PERFORMANCE" in content
