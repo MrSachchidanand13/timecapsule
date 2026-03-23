@@ -1,0 +1,89 @@
+[build-system]
+requires      = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name            = "timecapsule"
+version         = "6.0.0"
+description     = "Python program execution recorder — variable state, timings, crash forensics, 15 analysis functions"
+readme          = "README.md"
+license         = { file = "LICENSE" }
+requires-python = ">=3.8"
+keywords        = [
+    "profiler", "debugger", "tracing", "recording", "forensics",
+    "variable capture", "crash analysis", "performance",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Debuggers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Monitoring",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+
+# Zero required dependencies — pure stdlib
+dependencies = []
+
+[project.optional-dependencies]
+# psutil gives better cross-platform RAM/CPU metrics
+system = ["psutil>=5.9"]
+
+# GPU profiling
+gpu = ["pynvml>=11.0"]
+
+# development / testing
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "ruff>=0.1",
+    "mypy>=1.0",
+    "build>=1.0",
+    "twine>=4.0",
+]
+
+# everything
+all = ["timecapsule[system,gpu]"]
+
+[project.urls]
+Homepage      = "https://github.com/yourusername/timecapsule"
+Documentation = "https://github.com/yourusername/timecapsule/blob/main/docs/README.md"
+"Bug Tracker" = "https://github.com/yourusername/timecapsule/issues"
+Changelog     = "https://github.com/yourusername/timecapsule/blob/main/CHANGELOG.md"
+
+[project.scripts]
+timecapsule = "timecapsule.recorder:_cli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["timecapsule*"]
+
+[tool.setuptools.package-data]
+timecapsule = ["py.typed"]
+
+[tool.black]
+line-length    = 100
+target-version = ["py38"]
+
+[tool.ruff]
+line-length = 100
+select      = ["E", "F", "W", "I"]
+ignore      = ["E501"]
+
+[tool.mypy]
+python_version         = "3.8"
+warn_return_any        = true
+warn_unused_configs    = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths    = ["tests"]
+addopts      = "-v --tb=short"
