@@ -33,7 +33,10 @@ def run_cli(*args, tc_path=None):
     if tc_path:
         cmd.append(tc_path)
     cmd.extend(args)
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+    result = subprocess.run(
+        cmd, capture_output=True, timeout=30,
+        encoding="utf-8", errors="replace",   # force UTF-8 on Windows
+    )
     return result.returncode, result.stdout, result.stderr
 
 
