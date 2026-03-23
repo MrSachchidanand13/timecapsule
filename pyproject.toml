@@ -1,6 +1,6 @@
 [build-system]
 requires      = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name            = "timecapsule"
@@ -9,6 +9,9 @@ description     = "Python program execution recorder — variable state, timings
 readme          = "README.md"
 license         = { file = "LICENSE" }
 requires-python = ">=3.8"
+authors = [
+    { name = "MrSachchidanand13", email = "github.com/MrSachchidanand13" },
+]
 keywords        = [
     "profiler", "debugger", "tracing", "recording", "forensics",
     "variable capture", "crash analysis", "performance",
@@ -54,10 +57,10 @@ dev = [
 all = ["timecapsule[system,gpu]"]
 
 [project.urls]
-Homepage      = "https://github.com/yourusername/timecapsule"
-Documentation = "https://github.com/yourusername/timecapsule/blob/main/docs/README.md"
-"Bug Tracker" = "https://github.com/yourusername/timecapsule/issues"
-Changelog     = "https://github.com/yourusername/timecapsule/blob/main/CHANGELOG.md"
+Homepage      = "https://github.com/MrSachchidanand13/timecapsule"
+Documentation = "https://github.com/MrSachchidanand13/timecapsule/blob/main/README.md"
+"Bug Tracker" = "https://github.com/MrSachchidanand13/timecapsule/issues"
+Changelog     = "https://github.com/MrSachchidanand13/timecapsule/blob/main/CHANGELOG.md"
 
 [project.scripts]
 timecapsule = "timecapsule.recorder:_cli"
