@@ -10,7 +10,7 @@ readme          = "README.md"
 license         = { file = "LICENSE" }
 requires-python = ">=3.8"
 authors = [
-    { name = "MrSachchidanand13", email = "github.com/MrSachchidanand13" },
+    { name = "MrSachchidanand13" },
 ]
 keywords        = [
     "profiler", "debugger", "tracing", "recording", "forensics",
